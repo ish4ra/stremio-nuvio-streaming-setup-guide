@@ -1,105 +1,87 @@
-# Nuvio Streaming Setup Guide
+# Stremio & Nuvio Streaming Setup Guide
 
-> A clean, practical setup for **Nuvio + AIOStreams (Midnight) + TorBox**, with a Real-Debrid alternative and buffering/network troubleshooting.
+> A practical setup guide for **Stremio or Nuvio + AIOStreams + TorBox / Real-Debrid**, with client-specific instructions and buffering/network troubleshooting.
 
+[![Stremio](https://img.shields.io/badge/Stremio-media%20center-7b5cff)](https://www.stremio.com/)
 [![Nuvio](https://img.shields.io/badge/Nuvio-media%20client-4f46e5)](https://nuvio.tv)
 [![AIOStreams](https://img.shields.io/badge/AIOStreams-Midnight-111827)](https://docs.aiostreams.viren070.me/)
 [![TorBox](https://img.shields.io/badge/TorBox-Essential%20%243%2Fmo-2563eb)](https://torbox.app/pricing)
 
-## What this setup does
+This guide is for media you own or are otherwise authorized to access. Stremio, Nuvio, AIOStreams, TorBox, Real-Debrid, and this repository are independent projects/services.
 
-My preferred stack is:
+---
+
+## Start here
+
+Choose your client:
+
+- **Stremio:** [STREMIO.md](STREMIO.md)
+- **Nuvio:** [NUVIO.md](NUVIO.md)
+- Verification / source notes: [SOURCES.md](SOURCES.md)
+
+---
+
+## The most important difference
+
+The AIOStreams setup should be different depending on the client.
+
+### Stremio route
 
 ```text
-Nuvio
-  ├─ AIOStreams (Midnight public instance)
-  │    └─ returns source/P2P results
-  │
-  └─ Nuvio native debrid integration
-       └─ TorBox resolves playable links
+Stremio
+  └─ AIOStreams
+       ├─ TorBox API key
+       └─ or Real-Debrid API key
+            ↓
+       resolved playable streams
 ```
 
-The main advantage of this layout is that your **TorBox account is linked directly inside Nuvio**. AIOStreams can be used as the source layer without needing your TorBox key.
+Stremio does not provide Nuvio's native TorBox resolver, so for the setup in this guide your debrid credentials are configured **inside AIOStreams**.
 
-This guide is intended for media you own or are otherwise authorized to access. Nuvio, AIOStreams, TorBox, Real-Debrid, and this repository are independent projects/services.
+### Nuvio + native TorBox route
 
----
+```text
+AIOStreams
+  └─ raw/P2P source results
+       ↓
+Nuvio native debrid resolver
+  └─ TorBox
+       ↓
+playable stream
+```
 
-## Recommended stack
+If your Nuvio build exposes **Settings → Integrations → Connected Services → TorBox**, this is the route I recommend for TorBox:
 
-| Part | Recommended | Why |
-|---|---|---|
-| Client | **Nuvio** | Free/open-source client with native TorBox integration |
-| Source aggregator | **AIOStreams — Midnight** | Good public-instance option; stable + nightly channels available |
-| Debrid | **TorBox Essential** | Low-cost entry tier, native Nuvio support |
-| Alternative debrid | **Real-Debrid** | Works through AIOStreams, but is not currently a native Nuvio Connected Service |
+- connect TorBox directly in Nuvio;
+- configure AIOStreams **without** a TorBox API key;
+- keep P2P/raw-source results available;
+- let Nuvio resolve them through TorBox locally.
 
-### Current pricing snapshot
+> **Do not configure the same TorBox account inside AIOStreams if your goal is to use Nuvio's native TorBox resolver.** If AIOStreams resolves the link first, Nuvio never receives the raw source that its own resolver needs.
 
-- **TorBox Essential:** **$3/month**
-- **Real-Debrid:** **€4 / 30 days**, **€9 / 90 days**, **€16 / 180 days**
+### Nuvio + Real-Debrid / fallback route
 
-So the simple 30-day Real-Debrid option is a little more expensive than TorBox Essential. However, the longer Real-Debrid plans have a lower effective cost per 30 days, so compare the actual duration you plan to buy rather than only the headline monthly price.
+```text
+AIOStreams + Real-Debrid or TorBox credentials
+       ↓
+resolved playable stream
+       ↓
+Nuvio
+```
 
-Prices and limits can change. Always check the provider's current pricing page before paying.
+Use this route when:
 
----
+- you want **Real-Debrid** in Nuvio;
+- your Nuvio build does not expose native TorBox Connected Services;
+- or you simply prefer AIOStreams to handle debrid resolution.
 
-# 1. Install Nuvio
-
-Use the official Nuvio project for your device:
-
-- Website: https://nuvio.tv
-- Android TV releases: https://github.com/NuvioMedia/NuvioTV/releases
-- Mobile: https://github.com/NuvioMedia/NuvioMobile
-- Desktop: https://github.com/NuvioMedia/NuvioDesktop/releases
-
-Keep Nuvio updated because addon, player, and debrid behavior changes fairly quickly.
-
----
-
-# 2. Get TorBox
-
-For a normal personal setup, **TorBox Essential** is a good starting point.
-
-Current Essential-plan highlights include:
-
-- $3/month
-- 3 concurrent download slots
-- up to 200 GB per download
-- up to 1 Gbps listed speed
-- API / third-party app access
-- 300 GB permanent storage
-
-Sign up / pricing:
-
-https://torbox.app/pricing
-
-> You do **not** need to place the TorBox API key inside AIOStreams for the primary setup in this guide.
+Current Nuvio community documentation lists **TorBox and Premiumize** for its native debrid integration, not Real-Debrid.
 
 ---
 
-# 3. Connect TorBox directly to Nuvio
+## My AIOStreams instance choice
 
-In Nuvio:
-
-1. Open **Settings**.
-2. Go to **Integrations → Connected Services**.
-3. Select **TorBox**.
-4. Complete the browser/device-code authorization flow.
-5. Confirm the account shows as **Connected**.
-6. Turn on **Resolve playable links**.
-7. Optional: enable **Cloud library** if you want Nuvio to browse files already stored in your TorBox account.
-
-Nuvio's native debrid integration can take raw P2P hashes returned by compatible addons and resolve them through your linked TorBox account.
-
----
-
-# 4. Configure AIOStreams — Midnight
-
-AIOStreams has several community-run public instances. I personally prefer **Midnight's instance** for this setup.
-
-### Midnight URLs
+For this guide I use **Midnight's AIOStreams**.
 
 **Stable**
 
@@ -109,67 +91,51 @@ https://aiostreamsfortheweebsstable.midnightignite.me
 
 https://aiostreamsfortheweebs.midnightignite.me
 
-For most people, start with **Stable**. Try Nightly only if you need a newer feature or a fix that has not reached stable yet.
+I prefer Midnight for my own setup. Public-instance performance can vary by location, routing, load, and upstream addon health, so this is a personal preference rather than a claim that every other host is worse.
 
-## Important: use P2P/source mode for native Nuvio + TorBox
+### What about ElfHosted?
 
-For the primary setup in this guide:
+AIOStreams' current documentation describes the public ElfHosted instance as a reputable, professionally hosted and very stable option. However, that public instance **forcefully excludes P2P, HTTP, and Live stream types**.
 
-- configure AIOStreams as a source/P2P layer;
-- **do not add your TorBox API key to AIOStreams**;
-- let Nuvio's native TorBox integration resolve playable links.
+That matters especially for **Nuvio's native TorBox route**, because Nuvio needs compatible raw/P2P results to resolve itself.
 
-AIOStreams' template/setup flow allows debrid selection to be skipped. The exact UI can change between releases, so the important rule is simple:
+For normal **Stremio + debrid-through-AIOStreams**, ElfHosted may still work well. If you personally experience buffering, slow startup, or routing differences on any public host, compare the same source using Midnight or another public instance before concluding the debrid service itself is the problem.
 
-> **AIOStreams finds the raw source; Nuvio + TorBox resolves it.**
-
-When AIOStreams gives you the final addon/manifest URL, install it in Nuvio.
-
-Typical Nuvio path:
-
-**Settings → Content & Discovery → Addons → Install from URL**
-
-On Android TV, the addon menu may be accessible from the sidebar depending on the Nuvio version.
+AIOStreams' own setup guide currently recommends **Yeb's** as the general starting point for most users, while listing Midnight as another community instance. This repo uses Midnight because that is my preferred setup.
 
 ---
 
-# 5. Why I use Midnight instead of ElfHosted for this setup
+## Debrid options
 
-ElfHosted is a reputable and professionally hosted public AIOStreams instance, and the AIOStreams documentation describes it as a stable option.
+### TorBox — recommended starting point for this guide
 
-However, its **public instance forcefully excludes P2P, HTTP, and Live stream types**. That makes it a poor fit for this particular Nuvio-native-debrid workflow, because Nuvio needs compatible raw/P2P results to hand to its own TorBox resolver.
+Current TorBox Essential plan:
 
-Public instances can also experience temporary load, routing, availability, or buffering-related issues. That does **not** mean ElfHosted is inherently slow or broken. If playback is poor, compare the same title/source with another instance before blaming the host.
+- **$3/month**
+- 3 concurrent download slots
+- unlimited downloads
+- 200 GB max per download
+- up to 1 Gbps listed speed
+- API / third-party app access
+- 300 GB permanent storage
 
-For my setup, I use **Midnight** because it better matches the source/P2P workflow described above.
+Official pricing:
 
-AIOStreams public-instance list:
+https://torbox.app/pricing
 
-https://docs.aiostreams.viren070.me/getting-started/public-instances/
+For **Stremio/AIOStreams**, TorBox's AIOStreams setup requires the API key from:
 
----
+**TorBox → Settings → API**
 
-# 6. Real-Debrid alternative
+For **Nuvio native TorBox**, link the account inside Nuvio instead and leave TorBox credentials out of AIOStreams.
 
-You can also use **Real-Debrid** with AIOStreams.
+### Real-Debrid
 
-The important difference is architecture:
+AIOStreams supports Real-Debrid credentials directly. Its setup documentation points users to:
 
-```text
-TorBox route in this guide:
-AIOStreams (source/P2P) → Nuvio → native TorBox integration
+**Real-Debrid → My Account → API**
 
-Real-Debrid alternative:
-AIOStreams + Real-Debrid credentials → Nuvio receives resolved debrid streams
-```
-
-At the moment, Nuvio's native Connected Services debrid integration supports **TorBox and Premiumize**, not Real-Debrid. Therefore, if you want Real-Debrid, configure it inside AIOStreams instead of looking for a Real-Debrid button inside Nuvio's native Connected Services menu.
-
-AIOStreams supports Real-Debrid as a service and can accept its API credentials in the configuration flow.
-
-### Pricing
-
-Current commonly listed Real-Debrid prices are:
+Commonly documented current price points:
 
 | Duration | Price | Approx. cost per 30 days |
 |---|---:|---:|
@@ -178,111 +144,124 @@ Current commonly listed Real-Debrid prices are:
 | 90 days | €9 | €3.00 |
 | 180 days | €16 | ~€2.67 |
 
-For a one-month test, TorBox Essential is usually cheaper on the headline price. For longer periods, Real-Debrid's effective 30-day cost can become competitive.
+So a **30-day Real-Debrid plan is a little more expensive than TorBox Essential** on the headline price, while longer RD packages reduce the effective 30-day cost.
 
-> Security note: putting a debrid API credential into a public AIOStreams instance means you are trusting that public instance with the configuration needed to use that service. If you want maximum control, self-host AIOStreams or use Nuvio's native TorBox route where possible.
+AIOStreams' current docs also describe Real-Debrid as having a larger cache but a one-IP-at-a-time restriction. Check the provider's current rules before purchase because policies can change.
 
 ---
 
-# 7. Buffering: what to try first
+## AIOStreams Stable vs Nightly
 
-Do not immediately assume your internet speed is the problem. Playback can depend on the selected file, provider route, CDN, public AIOStreams instance, player settings, and the debrid service.
+AIOStreams public instances may offer:
+
+- **Stable** — official tagged releases; safer default for everyday use.
+- **Nightly** — newest changes and fixes first, with a higher chance of regressions.
+
+The official AIOStreams template documentation says its current template is developed/tested primarily against **Nightly**, although it generally works on Stable too.
+
+My suggestion:
+
+1. Start with **Midnight Stable**.
+2. If the current template or a new feature does not work correctly, test **Midnight Nightly**.
+3. Once fixed/released, move back to Stable if you prefer fewer changes.
+
+---
+
+## Buffering: what to test first
+
+Do not immediately assume your internet package is too slow. Playback depends on the selected file, bitrate, debrid/CDN route, player, public AIOStreams instance, upstream addons, and your ISP path.
 
 Try these in order:
 
-1. **Try another source/file** — one bad file does not mean the full setup is broken.
-2. **Prefer cached sources** when using a debrid-resolved configuration.
-3. **Try a smaller file / lower bitrate** to see whether the problem is raw throughput.
-4. **Compare Midnight Stable vs Nightly** if one instance has a temporary issue.
-5. **Test another AIOStreams public instance** to isolate instance-specific routing/load problems.
-6. **Check TorBox service status / speed** before changing Nuvio settings.
-7. If your Nuvio version exposes them, test **HTTP/2** and **Parallel Connections** under its custom network/player options.
+1. **Try another source/file.**
+2. **Try a smaller file / lower bitrate.**
+3. **Compare Midnight Stable vs Nightly.**
+4. **Compare another AIOStreams public instance.**
+5. **Check TorBox / Real-Debrid service status.**
+6. Test on Ethernet or strong 5 GHz / 6 GHz Wi-Fi.
+7. If your client exposes them, test HTTP/network options such as parallel connections conservatively rather than maxing them immediately.
 
-### Parallel connections
-
-Some hosts/CDNs cap throughput per TCP connection. Nuvio can use multiple HTTP range connections for progressive files when the host supports byte ranges. This can improve aggregate throughput on some connections, but more connections are not automatically better — they also increase memory and connection overhead.
-
-Start conservatively and compare playback rather than maxing every setting.
+If one public AIOStreams instance buffers while another does not, that can indicate host/routing/upstream differences rather than a problem with Stremio/Nuvio itself.
 
 ---
 
-# 8. IPv6: can it reduce buffering?
+## IPv6: will it reduce buffering?
 
-**Sometimes — but IPv6 is not a universal buffering fix.**
+**Possibly, but not automatically.**
 
-If your ISP has a better IPv6 route to the debrid/CDN server than its IPv4 route, IPv6 may improve latency or throughput. If the IPv6 route is worse, it can make no difference or even perform worse.
+Enabling IPv6 can help only when your ISP has a better IPv6 route to the debrid/CDN endpoint than its IPv4 route. If IPv6 routing is equal, you may see no difference. If it is poor or broken, playback can become worse.
 
-### Recommended way to test it
+### Best way to test
 
-Do **not** replace your router with IPv6-only networking.
-
-Use **dual stack** instead:
+Keep **dual stack** enabled:
 
 ```text
 IPv4 + IPv6
 ```
 
-Then:
+Do not switch your home network to IPv6-only just for streaming.
 
-1. Enable your ISP's **native IPv6** option on the router if your ISP supports it.
+1. Enable your ISP's **native IPv6** option if supported.
 2. Keep IPv4 enabled.
-3. Reboot/reconnect the router and client device.
-4. Confirm the device actually received IPv6 connectivity.
-5. Play the same source/file and compare startup time + buffering.
-6. If it gets worse, disable IPv6 again and compare.
+3. Reconnect/reboot the router and client.
+4. Confirm the device actually has working IPv6 connectivity.
+5. Test the **same source/file** before and after.
+6. Compare startup time, sustained bitrate, and buffering.
+7. If it becomes worse, disable IPv6 again.
 
-Modern networking stacks often prefer the route that establishes connectivity fastest, but app behavior and provider routing still vary.
+Modern clients commonly race or prefer the route that establishes connectivity best, but application and provider behavior still varies.
 
-### Bottom line
-
-- Good native IPv6 route → **may help**.
-- Same-quality route → **probably no noticeable difference**.
-- Poor/broken IPv6 route → **may hurt playback**.
-
-So treat IPv6 as an **A/B test**, not a mandatory tweak.
+**Bottom line:** IPv6 is an **A/B test**, not a guaranteed anti-buffering tweak.
 
 ---
 
-# 9. Quick troubleshooting table
+## Security / privacy notes
 
-| Problem | First thing to check |
-|---|---|
-| No sources at all | Confirm AIOStreams addon is installed/enabled |
-| P2P results appear but do not resolve | Confirm TorBox is connected in Nuvio and **Resolve playable links** is enabled |
-| Real-Debrid does not appear in Nuvio Connected Services | Expected — configure RD in AIOStreams instead |
-| Constant buffering on one file | Try another source / smaller file |
-| Everything buffers | Test TorBox speed/status, network route, then another AIOStreams instance |
-| ElfHosted does not return P2P streams | Expected on the public instance; P2P/HTTP/Live are excluded |
-| Midnight temporarily fails | Try stable/nightly or another public instance |
-| IPv6 made things worse | Return to IPv4 or dual-stack with IPv6 disabled and compare |
+- Never commit a TorBox, Real-Debrid, TMDB, TVDB, or other API key to GitHub.
+- A public AIOStreams instance has to process the configuration needed to use services configured through that instance. If you do not want to trust a community host with that configuration, self-host AIOStreams or use Nuvio's native TorBox route where available.
+- Keep your AIOStreams configuration UUID/password private.
+- Public instance URLs, restrictions, and availability can change at any time.
 
 ---
 
-# Useful links
+## Quick architecture table
+
+| Client / service | Where the debrid account goes | AIOStreams mode |
+|---|---|---|
+| **Stremio + TorBox** | TorBox API key in AIOStreams | Debrid-enabled |
+| **Stremio + Real-Debrid** | RD API key in AIOStreams | Debrid-enabled |
+| **Nuvio + native TorBox** | TorBox connected inside Nuvio | P2P/raw-source, no TorBox key in AIOStreams |
+| **Nuvio + Real-Debrid** | RD API key in AIOStreams | Debrid-enabled |
+| **Nuvio without native TorBox support** | TorBox API key in AIOStreams | Debrid-enabled |
+
+---
+
+## Useful links
+
+### Stremio
+- https://www.stremio.com/
+- https://stremio.zendesk.com/hc/en-us/articles/360021348391-How-to-install-uninstall-Add-ons
 
 ### Nuvio
 - https://nuvio.tv
 - https://github.com/NuvioMedia
-
-### Nuvio community documentation
-- https://github.com/haaihond/Nuvio-Wiki
+- Community docs: https://github.com/haaihond/Nuvio-Wiki
 
 ### AIOStreams
-- Documentation: https://docs.aiostreams.viren070.me/
+- Docs: https://docs.aiostreams.viren070.me/
+- Setup: https://docs.aiostreams.viren070.me/configuration/setup/
 - Public instances: https://docs.aiostreams.viren070.me/getting-started/public-instances/
-- Setup guide: https://docs.aiostreams.viren070.me/configuration/setup/
+- Configure options: https://docs.aiostreams.viren070.me/configuration/options/
 
-### TorBox
-- https://torbox.app/
-- https://torbox.app/pricing
-
-### Real-Debrid
-- https://real-debrid.com/
+### Debrid
+- TorBox: https://torbox.app/
+- TorBox pricing: https://torbox.app/pricing
+- Real-Debrid: https://real-debrid.com/
 
 ---
 
-# Notes
+## Notes
 
-This is a personal/community setup guide, not official documentation for any of the projects or services mentioned above. Public instance URLs, pricing, features, and menus may change over time.
+This is a personal/community setup guide, not official documentation for any project or service mentioned above. Menus, pricing, instance restrictions, and integrations change quickly.
 
-If something in this guide is outdated, open an issue or PR with the current behavior and a source where possible.
+If something is outdated, open an issue or PR with a current source where possible.
