@@ -1,13 +1,21 @@
 <div align="center">
 
-# Stremio + Nuvio Streaming Setup Guide
+# 🎬 Stremio + Nuvio Streaming Setup Guide
 
-**A clean, practical setup for AIOStreams + TorBox / Real-Debrid — without addon clutter.**
+### One clean AIOStreams setup. Two clients. No addon clutter.
 
-[![Stremio](https://img.shields.io/badge/Stremio-supported-7B5CFA)](https://www.stremio.com/)
-[![Nuvio](https://img.shields.io/badge/Nuvio-supported-4F46E5)](https://nuvio.tv/)
-[![AIOStreams](https://img.shields.io/badge/AIOStreams-v2-111827)](https://docs.aiostreams.viren070.me/)
-[![Last reviewed](https://img.shields.io/badge/reviewed-Sep%202026-0A7B83)](SOURCES.md)
+A practical guide for **Stremio** and **Nuvio** using **AIOStreams**, **TorBox / Real-Debrid**, a small curated addon stack, and focused troubleshooting.
+
+<br>
+
+[![Stremio Guide](https://img.shields.io/badge/STREMIO-OPEN_GUIDE-7B5CFA?style=for-the-badge)](STREMIO.md)
+[![Nuvio Guide](https://img.shields.io/badge/NUVIO-OPEN_GUIDE-4F46E5?style=for-the-badge)](NUVIO.md)
+
+[![Addons](https://img.shields.io/badge/CURATED_ADDONS-22272E?style=flat-square)](ADDONS.md)
+[![Troubleshooting](https://img.shields.io/badge/TROUBLESHOOTING-22272E?style=flat-square)](TROUBLESHOOTING.md)
+[![Sources](https://img.shields.io/badge/SOURCES-22272E?style=flat-square)](SOURCES.md)
+
+<sub>Last reviewed: September 2026</sub>
 
 </div>
 
@@ -118,6 +126,6 @@ Use the services and addons only with media you own or are authorized to access.
 
 <div align="center">
 
-If this setup saved you time, a ⭐ helps other people find the guide.
+**Useful? Give the repo a ⭐ so other people can find it.**
 
 </div>
