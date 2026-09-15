@@ -2,38 +2,101 @@
 
 # 🎬 Stremio + Nuvio Streaming Setup Guide
 
-### One clean AIOStreams setup. Two clients. No addon clutter.
+### One clean AIOStreams setup. Two clients. Less addon clutter.
 
-A practical guide for **Stremio** and **Nuvio** using **AIOStreams**, **TorBox / Real-Debrid**, a small curated addon stack, and focused troubleshooting.
+A practical setup reference for **Stremio** and **Nuvio** using **AIOStreams**, a small curated addon stack, optional debrid integration, and focused troubleshooting.
 
-<br>
+![Stremio](https://img.shields.io/badge/Stremio-guide-7B5CFA?style=for-the-badge)
+![Nuvio](https://img.shields.io/badge/Nuvio-guide-4F46E5?style=for-the-badge)
+![Reviewed](https://img.shields.io/badge/reviewed-September%202026-0969da?style=for-the-badge)
 
-[![Stremio Guide](https://img.shields.io/badge/STREMIO-OPEN_GUIDE-7B5CFA?style=for-the-badge)](STREMIO.md)
-[![Nuvio Guide](https://img.shields.io/badge/NUVIO-OPEN_GUIDE-4F46E5?style=for-the-badge)](NUVIO.md)
-
-[![Addons](https://img.shields.io/badge/CURATED_ADDONS-22272E?style=flat-square)](ADDONS.md)
-[![Troubleshooting](https://img.shields.io/badge/TROUBLESHOOTING-22272E?style=flat-square)](TROUBLESHOOTING.md)
-[![Sources](https://img.shields.io/badge/SOURCES-22272E?style=flat-square)](SOURCES.md)
-
-<sub>Last reviewed: September 2026</sub>
+**[Stremio setup](STREMIO.md)** · **[Nuvio setup](NUVIO.md)** · **[Curated addons](ADDONS.md)** · **[Troubleshooting](TROUBLESHOOTING.md)**
 
 </div>
 
 ---
 
-## Pick your client
+## ✨ Pick your path
 
-| Client | Recommended route | Guide |
-|---|---|---|
-| **Stremio** | AIOStreams handles your TorBox / Real-Debrid service and returns resolved streams | **[Stremio setup →](STREMIO.md)** |
-| **Nuvio + native TorBox** | AIOStreams returns raw/P2P sources; Nuvio resolves them through TorBox | **[Nuvio setup →](NUVIO.md)** |
-| **Nuvio + Real-Debrid** | AIOStreams handles Real-Debrid and sends resolved streams to Nuvio | **[Nuvio setup →](NUVIO.md)** |
+<table>
+<tr>
+<td width="50%" valign="top">
 
-> **The important difference:** Stremio does not provide Nuvio's native TorBox resolver. With Stremio, configure the debrid service in AIOStreams. With Nuvio's native TorBox integration, keep AIOStreams in raw/P2P mode instead.
+### 🟣 Stremio
+
+Best when you want a mature cross-platform client with an addon-driven workflow.
+
+**Recommended architecture:** let AIOStreams handle the configured stream/debrid layer and return the final results to Stremio.
+
+**[Open the Stremio guide →](STREMIO.md)**
+
+</td>
+<td width="50%" valign="top">
+
+### 🔵 Nuvio
+
+Best when you prefer Nuvio's interface/features and want the option to use its native provider integrations where supported.
+
+The exact AIOStreams role depends on whether Nuvio itself is handling the provider side.
+
+**[Open the Nuvio guide →](NUVIO.md)**
+
+</td>
+</tr>
+</table>
+
+> **Important:** do not blindly copy the same AIOStreams/debrid configuration between Stremio and Nuvio. The client architecture can differ.
 
 ---
 
-## The lean setup I recommend
+## 🧭 Architecture at a glance
+
+### Stremio route
+
+```text
+Stremio
+   │
+   ▼
+AIOStreams
+   │
+   ├── curated source/addon layer
+   └── optional provider/debrid handling
+   │
+   ▼
+Returned stream results
+```
+
+### Nuvio route
+
+```text
+Nuvio
+   │
+   ├── native provider integration (when used)
+   │
+   └── AIOStreams
+          │
+          └── curated source/addon layer
+```
+
+The goal is not “install everything.” The goal is a predictable stream pipeline that is easy to troubleshoot.
+
+---
+
+## 🚀 Quick setup flow
+
+| Step | Action |
+|---|---|
+| **1** | Choose **Stremio** or **Nuvio** as the main client |
+| **2** | Add/configure **AIOStreams** for that client architecture |
+| **3** | Keep the source stack small |
+| **4** | Add metadata/subtitle helpers only if useful |
+| **5** | Test a few titles and confirm result quality |
+| **6** | Tune filters/sorting instead of adding dozens of addons |
+| **7** | Use the troubleshooting guide before changing everything at once |
+
+---
+
+## 🧩 Lean addon stack
 
 ```text
 Client
@@ -48,84 +111,173 @@ Client
   └── Stremio Community Subtitles
 ```
 
-**Debrid:** TorBox is my primary choice. Real-Debrid remains a useful alternative / backup depending on your client and preferred workflow.
+Why keep it small?
 
-This is intentionally a **small stack**. AIOStreams already combines, deduplicates, filters, sorts and formats results, so installing every scraper separately usually creates more duplicates and more things to troubleshoot.
+- fewer duplicate results;
+- fewer moving parts;
+- easier debugging;
+- easier migration between instances;
+- less time maintaining addon clutter.
 
-**[See the curated addon list and advanced setup →](ADDONS.md)**
-
----
-
-## AIOStreams host choice
-
-| Host | Best for | Important note |
-|---|---|---|
-| **Midnight** | My preferred community instance | Stable + Nightly available |
-| **Yeb's** | Easy default | AIOStreams docs currently recommend it as the general starting point |
-| **ElfHosted public** | Professionally hosted / stable | Public instance excludes P2P, HTTP and Live stream types |
-| **Self-hosted** | Maximum control | No public-instance policy/rate-limit dependency |
-
-For most people, start with **Stable**. Use Nightly when you specifically need a newer fix or feature.
+**[See the addon notes and advanced recommendations →](ADDONS.md)**
 
 ---
 
-## Advanced quality-of-life setup
+## ⚙️ AIOStreams: what to tune first
 
-AIOStreams is most useful when it is treated as a **single stream layer**, not just a bag of addons.
+AIOStreams is most useful when treated as the **single organization/filtering layer** rather than just another addon.
 
-A good configuration should:
-
-- prefer **cached/debrid-ready** results when using a debrid-managed setup;
-- sort by the quality and resolution your device can actually play;
-- prefer your audio language and supported audio formats;
-- set a sensible file-size ceiling for your connection/device;
-- exclude formats you do not want, such as 3D or unsupported HDR/DV profiles;
-- deduplicate equivalent results;
-- keep backup sources enabled without letting them flood the top of the list.
-
-AIOStreams supports filtering by resolution, size, visual tags, language and other stream properties, plus custom sorting/formatting.
-
-**Do not copy someone else's giant config blindly.** Start lean, test it, then add only what fixes a real gap.
-
----
-
-## Buffering / network problems
-
-Before changing ten settings at once:
-
-1. Test another source for the same title.
-2. Try a smaller file / lower bitrate.
-3. Compare your current AIOStreams instance with another instance.
-4. Check the debrid provider's status/routing.
-5. Test IPv4 vs **dual-stack IPv4 + IPv6** if your ISP provides native IPv6.
-6. Only then tune player/network options.
-
-IPv6 is **not** a guaranteed buffering fix. It can help when your ISP has a better IPv6 route to the host, and it can be worse when that route is poor.
-
-**[Full troubleshooting flow →](TROUBLESHOOTING.md)**
-
----
-
-## Guide map
-
-| File | What it contains |
+| Setting area | Practical goal |
 |---|---|
-| **[STREMIO.md](STREMIO.md)** | Stremio + AIOStreams + TorBox / Real-Debrid |
-| **[NUVIO.md](NUVIO.md)** | Nuvio native-TorBox route + AIOStreams-managed fallback |
-| **[ADDONS.md](ADDONS.md)** | Curated addons, source sets and advanced recommendations |
-| **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** | Buffering, missing streams, subtitles and instance problems |
-| **[SOURCES.md](SOURCES.md)** | Documentation and verification notes |
+| **Resolution** | Prioritize formats your device can actually play |
+| **File size** | Avoid results that exceed your connection/device limits |
+| **Audio** | Prefer languages/codecs your setup supports |
+| **HDR / DV / visual tags** | Exclude formats your display/player cannot handle well |
+| **Sorting** | Put the most useful results first |
+| **Deduplication** | Reduce equivalent duplicate entries |
+| **Backup sources** | Keep them available without letting them dominate results |
+
+> Start with a boring config that works. Add complexity only when you can point to a real problem it solves.
 
 ---
 
-## Why this guide stays small
+## 🌍 Instance / host choice
 
-The 2026 ecosystem changes quickly. Public instances go up and down, addons change hosts, and provider support changes. This repo therefore focuses on **architecture and a small set of reliable building blocks** instead of maintaining a giant list that becomes stale.
+| Option | Best for | Note |
+|---|---|---|
+| **Midnight** | Community-hosted option | Stable / Nightly availability can vary |
+| **Yeb's** | Easy community starting point | Useful general default when available |
+| **ElfHosted public** | Professionally hosted public option | Public policy/features may differ from self-hosting |
+| **Self-hosted** | Maximum control | You manage uptime, updates and resources |
 
-Use the services and addons only with media you own or are authorized to access. This is a community guide and is not affiliated with Stremio, Nuvio, AIOStreams, TorBox, Real-Debrid or the addon developers.
+Public instances can change policy, capacity, or availability. If reliability matters, keep the setup portable enough to switch hosts.
+
+---
+
+## 🧠 Stable vs Nightly
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### ✅ Stable
+
+Use this by default.
+
+Best for people who want fewer surprises and do not need a newly added fix immediately.
+
+</td>
+<td width="50%" valign="top">
+
+### 🧪 Nightly
+
+Use when a specific new fix/feature matters to you and you are willing to troubleshoot regressions.
+
+Do not choose Nightly just because the version number is newer.
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🧯 Buffering / missing-stream troubleshooting
+
+Do **one test at a time**.
+
+```text
+Problem
+  │
+  ├─ Try another result/source
+  │
+  ├─ Try a smaller file / lower bitrate
+  │
+  ├─ Compare another AIOStreams instance
+  │
+  ├─ Check provider/debrid status if used
+  │
+  ├─ Compare network path / IPv4 / IPv6 where relevant
+  │
+  └─ Only then change player/filter settings
+```
+
+| Symptom | First thing to check |
+|---|---|
+| No results | Instance/addon health and filtering rules |
+| Many duplicates | Deduplication / source overlap |
+| Buffering | Bitrate, source quality, routing, provider health |
+| One title fails | Try another result for the same title |
+| Subtitles missing | Subtitle addon/configuration |
+| Works on one client but not another | Client playback/codec differences |
+
+IPv6 can help when your ISP has a better route to the host, but it is **not** a universal buffering fix.
+
+**[Open the full troubleshooting flow →](TROUBLESHOOTING.md)**
+
+---
+
+## 📚 Guide map
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### Client setup
+
+- **[STREMIO.md](STREMIO.md)** — Stremio architecture and setup
+- **[NUVIO.md](NUVIO.md)** — Nuvio architecture and setup
+
+</td>
+<td width="50%" valign="top">
+
+### Reference
+
+- **[ADDONS.md](ADDONS.md)** — curated addon/source notes
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** — diagnostic flow
+- **[SOURCES.md](SOURCES.md)** — documentation / verification notes
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🎯 What this guide deliberately avoids
+
+- installing every addon that exists;
+- giant configs copied without understanding them;
+- treating Nightly as automatically better;
+- changing ten settings at once when troubleshooting;
+- pretending one client architecture maps perfectly onto another;
+- maintaining a huge stale list of public instances.
+
+The ecosystem moves quickly. A smaller architecture-focused guide ages better than a giant catalogue.
+
+---
+
+## 🌐 Related repos
+
+- **[jellyfin-media-server-guide](https://github.com/ish4ra/jellyfin-media-server-guide)** — build your own personal media server
+- **[open-source-alternatives](https://github.com/ish4ra/open-source-alternatives)** — discover open-source replacements and media tools
+- **[selfhosted-picks](https://github.com/ish4ra/selfhosted-picks)** — self-hosted software worth running
+- **[homelab-from-zero](https://github.com/ish4ra/homelab-from-zero)** — build the infrastructure underneath self-hosted services
+
+---
+
+## Responsible use
+
+Use apps, services, addons and integrations only with media you own or are authorized to access. This community guide is not affiliated with Stremio, Nuvio, AIOStreams, hosting providers, or addon developers.
+
+---
 
 <div align="center">
 
-**Useful? Give the repo a ⭐ so other people can find it.**
+### Useful setup reference?
+
+A ⭐ helps other users discover the guide.
+
+**Keep the stack small. Keep the architecture understandable.**
+
+<sub>Last reviewed: September 2026</sub>
 
 </div>
